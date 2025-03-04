@@ -20,6 +20,7 @@ class PostsController < ApplicationController
   def create
     the_post = Post.new
     the_post.title = params.fetch("query_title")
+    the_post.id = current_user.id
     the_post.body = params.fetch("query_body")
     the_post.expires_on = params.fetch("query_expires_on")
     the_post.board_id = params.fetch("query_board_id")
@@ -52,9 +53,10 @@ class PostsController < ApplicationController
   def destroy
     the_id = params.fetch("path_id")
     the_post = Post.where({ :id => the_id }).at(0)
+    the_board = the_post.board_id;
 
     the_post.destroy
 
-    redirect_to("/posts", { :notice => "Post deleted successfully."} )
+    redirect_to("/boards/#{the_board}", { :notice => "Post deleted successfully."} )
   end
 end
